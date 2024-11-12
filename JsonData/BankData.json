@@ -1,0 +1,52 @@
+{
+  "accounts": [
+    {
+      "AccountType": "PersonalAccount",
+      "AccountNumber": 111,
+      "UserName": "Anders Andersson",
+      "Balance": 5000.0,
+      "Transactions": [
+        {
+          "TransactionId": "T001",
+          "Date": "2024-01-01",
+          "Type": "Deposit",
+          "Amount": 1000.0
+        },
+        {
+          "TransactionId": "T002",
+          "Date": "2024-01-10",
+          "Type": "Withdraw",
+          "Amount": 500.0
+        }
+      ]
+    },
+    {
+      "AccountType": "SavingsAccount",
+      "AccountNumber": 222,
+      "UserName": "Anders Andersson",
+      "Balance": 8000.0,
+      "Transactions": [
+        {
+          "TransactionId": "T003",
+          "Date": "2024-01-05",
+          "Type": "Deposit",
+          "Amount": 2000.0
+        }
+      ]
+    },
+    {
+      "AccountType": "InvestmentAccount",
+      "AccountNumber": 333,
+      "UserName": "Anders Andersson",
+      "Balance": 15000.0,
+      "Transactions": [
+        {
+          "TransactionId": "T004",
+          "Date": "2024-01-15",
+          "Type": "Withdraw",
+          "Amount": 1000.0
+        }
+      ]
+    }
+  ]
+}
