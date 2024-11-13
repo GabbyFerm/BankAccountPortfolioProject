@@ -1,6 +1,7 @@
 ﻿using BankAccountApp.Interface;
 using System.Security.Principal;
 using System.Transactions;
+using Spectre.Console;
 
 namespace BankAccountApp.Classes
 {
@@ -27,17 +28,13 @@ namespace BankAccountApp.Classes
         {
             if (amountToDeposit <= 0)
             {
-                Console.WriteLine("Deposit amount must be greater than 0.");
+                AnsiConsole.MarkupLine("[red]Deposit amount must be greater than 0.[/]");
                 return;
             }
 
             Balance = Balance + amountToDeposit;
 
-            Transaction newTransaction = new Transaction();
-            newTransaction.TransactionId = "DP" + transactionCounter.ToString();
-            newTransaction.Date = DateTime.Now;
-            newTransaction.Type = "Deposit";
-            newTransaction.Amount = amountToDeposit;
+            Transaction newTransaction = new Transaction("DP" + transactionCounter.ToString(), DateTime.Now, "Deposit", amountToDeposit);
 
             transactions.Add(newTransaction);
             transactionCounter++;
@@ -46,17 +43,13 @@ namespace BankAccountApp.Classes
         {
             if (amountToDraw <= 0)
             {
-                Console.WriteLine("Withdrawal amount must be greater than 0.");
+                AnsiConsole.MarkupLine("[red]Withdrawal amount must be greater than 0.[/]");
                 return;
             }
 
             Balance = Balance - amountToDraw;
 
-            Transaction newTransaction = new Transaction();
-            newTransaction.TransactionId = "WD" + transactionCounter.ToString();
-            newTransaction.Date = DateTime.Now;
-            newTransaction.Type = "Withdraw";
-            newTransaction.Amount = amountToDraw;
+            Transaction newTransaction = new Transaction("WD" + transactionCounter.ToString(), DateTime.Now, "Withdraw", amountToDraw);
 
             transactions.Add(newTransaction);
             transactionCounter++;
@@ -68,25 +61,21 @@ namespace BankAccountApp.Classes
                 accountFrom.Withdraw(amountToTransfer);
                 accountTo.Deposit(amountToTransfer);
 
-                Console.WriteLine($"Successfully transferred {amountToTransfer} from account {accountFrom.AccountType} to account {accountTo.AccountType}.");
+                Console.WriteLine($"Successfully transferred {amountToTransfer:C} from account {accountFrom.AccountType} to account {accountTo.AccountType}.");
             }
             else
             {
-                Console.WriteLine("Insufficient funds for the transfer.");
+                AnsiConsole.MarkupLine("[red]Insufficient funds for the transfer.[/]");
             }
 
-            Transaction newTransaction = new Transaction();
-            newTransaction.TransactionId = "TR" + transactionCounter.ToString();
-            newTransaction.Date = DateTime.Now;
-            newTransaction.Type = "Transfer";
-            newTransaction.Amount = amountToTransfer;
+            Transaction newTransaction = new Transaction("TR" + transactionCounter.ToString(), DateTime.Now, "Transfer", amountToTransfer);
 
             transactions.Add(newTransaction);
             transactionCounter++;
         }
-        public void CheckBalance() 
+        public void CheckBalance()
         {
-            Console.WriteLine($"Your balance in {AccountType} with accountnumber {AccountNumber} is: {Balance}.");
+            AnsiConsole.MarkupLine($"Your balance in [bold]{AccountType}[/] with account number [underline]{AccountNumber}[/] is: [lightseagreen]{Balance:C}[/].");
         }
 
         public void AddTransaction(Transaction transaction)
@@ -95,15 +84,31 @@ namespace BankAccountApp.Classes
         }
         public void ShowTransactionHistory()
         {
-            if (transactions.Count == 0)
+            if (Transactions == null || Transactions.Count == 0)
             {
-                Console.WriteLine("No transactions found.");
+                AnsiConsole.MarkupLine("[red]No transactions found.[/]");
                 return;
             }
+            var table = new Table();
+
+            table.AddColumn(new TableColumn("[bold lightseagreen]Transaction ID[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold lightseagreen]Date[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold lightseagreen]Type[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold lightseagreen]Amount[/]").LeftAligned());
+
             foreach (var transaction in Transactions)
             {
-                Console.WriteLine($"{transaction.TransactionId} - {transaction.Date} - {transaction.Type} - {transaction.Amount}");
+                table.AddRow(
+                             transaction.TransactionId.ToString(),
+                             transaction.Date.ToString("yyyy-MM-dd HH:mm:ss"),
+                             transaction.Type,
+                             $"{transaction.Amount:C}");
             }
+
+            table.Border = TableBorder.Rounded;
+            table.LeftAligned();
+            table.BorderColor(Color.LightSeaGreen);
+            AnsiConsole.Write(table);
         }
     }
 }

@@ -7,7 +7,7 @@ using Figgle;
 
 namespace BankAccountApp
 {
-    internal class Program
+    internal class Program : MenuHelpers
     {
         static void Main(string[] args)
         {
@@ -73,42 +73,6 @@ namespace BankAccountApp
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        private static void ClearConsoleShowHeadline(string asciiArt)
-        {
-            Console.Clear();
-            AnsiConsole.MarkupLine($"[bold cyan]{asciiArt}[/]");
-            Console.WriteLine("Welcome to your bank!");
-        }
-
-        private static void PromptContinue()
-        {
-            Console.WriteLine("\nPress any key to return to the menu...");
-            Console.ReadKey();
-        }
-        private static string PrintOutUserMenu()
-        {
-            var menuOptions = new string[]
-            {
-                "List all accounts",
-                "Deposit money",
-                "Withdraw money",
-                "Transfer money",
-                "Check account balance",
-                "Show transaction history",
-                "Exit"
-            };
-
-            var menuSelection = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("Choose an option:")
-                    .PageSize(10) 
-                    .AddChoices(menuOptions)
-                    .HighlightStyle(new Style(Color.DarkTurquoise)) 
-            );
-
-            return menuSelection;
         }
     }
 }
